@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './App.css';
-import { DataGrid,GridToolbar } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import AdminDataGrid from './AdminDataGrid';
+import internshipGridColumn from './internshipGridData';
+import internshipGridRow from './internshipGridData';
+import internshipGridOptions from './internshipGridData';
+import Table from './Table'
 
-let i=0
+
+
 const columns = [
   { field: 'id', headerName: 'ID', width: 100 },
   {
@@ -47,7 +52,7 @@ const columns = [
     field: 'stipend',
     headerName: 'Stipend',
     width: 140,
-    type:'number',
+    type: 'number',
     editable: true,
   },
   {
@@ -63,34 +68,33 @@ const columns = [
     sortable: false,
     width: 160,
     valueGetter: (params) =>
-      `${params.getValue(params.id, 'firstName') || ''} ${
-        params.getValue(params.id, 'lastName') || ''
+      `${params.getValue(params.id, 'firstName') || ''} ${params.getValue(params.id, 'lastName') || ''
       }`,
   },
 ];
 
 const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 24, role:'SDE',email: 'jon@snow.com', duration:'2 months', stipend:1000, PhoneNo:'9876543210', },
-  { id: 2,lastName: 'Lannister', firstName: 'Cersei', age: 23, role:'UX designer',email: 'cersei@lannister.com', duration:'2 months', stipend:4000, PhoneNo:'9876543210', },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 22, role:'Scrum Master',email: 'jaime@lannister.com', duration:'3 months', stipend:1000, PhoneNo:'9876543210', },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 21, role:'Product manager',email: 'arya@stark.com', duration:'3 months', stipend:2000, PhoneNo:'9876543210', },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: 20, role: 'web developer',email: 'daenerys@targaryen.com', duration:'4 months', stipend:3000, PhoneNo:'9876543210', },
-  { id: 6, lastName: 'Melisandre', firstName: 'Vivek', age: 22, role: 'backend developer',email: 'vivek@melisandre.com', duration:'6 months', stipend:2000, PhoneNo:'9876543210', },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 23, role: 'coordinator',email: 'ferrara@cilfford.com', duration:'6 months', stipend:1000, PhoneNo:'9876543210', },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 24, role:'Digital Marketer',email: 'rossini@frances.com', duration:'3 months', stipend:5000, PhoneNo:'9876543210', },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 21, role:'Social influencer',email: 'harvey@roxie.com', duration:'3 months', stipend:4000, PhoneNo:'9876543210', },
-  { id: 10, lastName: 'Anime', firstName: 'Vikas', age: 23, role:'Product Manager',email: 'vikas@anime.com', duration:'4 months', stipend:2000, PhoneNo:'9876543210', },
-  { id: 11, lastName: 'Shukla', firstName: 'Harshit', age: 21, role:'SDE 1',email: 'harshit@shukla.com', duration:'2 months', stipend:4000, PhoneNo:'9876543210', },
-  { id: 12, lastName: 'Katiyar', firstName: 'Abdul', age: 21, role:'Product Owner',email: 'abdul@katiyar.com', duration:'3 months', stipend:3000, PhoneNo:'9876543210', },
-  { id: 13, lastName: 'Gupta', firstName: 'Ronny', age: 21, role:'Mentor',email: 'ronny@gupta.com', duration:'2 months', stipend:5000, PhoneNo:'9876543210', },
-  { id: 14, lastName: 'Chaudhary', firstName: 'Avi', age: 21, role:'SQL Expert',email: 'avi@chaudhary.com', duration:'1 months', stipend:2000, PhoneNo:'9876543210', },
-  { id: 15, lastName: 'Khanuja', firstName: 'Ansh', age: 21, role:'DataBase Manager',email: 'ansh@khanuja.com', duration:'4 months', stipend:2000, PhoneNo:'9876543210', },
-  { id: 16, lastName: 'Kumar', firstName: 'Ankit', age: 21, role:'Coder',email: 'ankit@kumar.com', duration:'2 months', stipend:5000, PhoneNo:'9876543210', },
-  { id: 17, lastName: 'Chandra', firstName: 'Jitendra', age: 21, role:'Software Developer',email: 'jitendra@chandra.com', duration:'5 months', stipend:5000, PhoneNo:'9876543210', },
-  { id: 18, lastName: 'Meena', firstName: 'Poojith', age: 21, role:'UI Designer',email: 'poojith@meena.com', duration:'2 months', stipend:4000, PhoneNo:'9876543210', },
-  { id: 19, lastName: 'Keshri', firstName: 'Mukul', age: 21, role:'Typist',email: 'mukul@keshri.com', duration:'1 months', stipend:3000, PhoneNo:'9876543210', },
-  { id: 20, lastName: 'Parit', firstName: 'Aditya', age: 21, role:'Data Owner',email: 'aditya@parit.com', duration:'3 months', stipend:2000, PhoneNo:'9876543210', },
-  { id: 21, lastName: 'Chawla', firstName: 'Vinay', age: 21, role:'Role Owner',email: 'vinay@Chawla.com', duration:'6 months', stipend:1000, PhoneNo:'9876543210', },
+  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 24, role: 'SDE', email: 'jon@snow.com', duration: '2 months', stipend: 1000, PhoneNo: '9876543210', },
+  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 23, role: 'UX designer', email: 'cersei@lannister.com', duration: '2 months', stipend: 4000, PhoneNo: '9876543210', },
+  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 22, role: 'Scrum Master', email: 'jaime@lannister.com', duration: '3 months', stipend: 1000, PhoneNo: '9876543210', },
+  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 21, role: 'Product manager', email: 'arya@stark.com', duration: '3 months', stipend: 2000, PhoneNo: '9876543210', },
+  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: 20, role: 'web developer', email: 'daenerys@targaryen.com', duration: '4 months', stipend: 3000, PhoneNo: '9876543210', },
+  { id: 6, lastName: 'Melisandre', firstName: 'Vivek', age: 22, role: 'backend developer', email: 'vivek@melisandre.com', duration: '6 months', stipend: 2000, PhoneNo: '9876543210', },
+  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 23, role: 'coordinator', email: 'ferrara@cilfford.com', duration: '6 months', stipend: 1000, PhoneNo: '9876543210', },
+  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 24, role: 'Digital Marketer', email: 'rossini@frances.com', duration: '3 months', stipend: 5000, PhoneNo: '9876543210', },
+  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 21, role: 'Social influencer', email: 'harvey@roxie.com', duration: '3 months', stipend: 4000, PhoneNo: '9876543210', },
+  { id: 10, lastName: 'Anime', firstName: 'Vikas', age: 23, role: 'Product Manager', email: 'vikas@anime.com', duration: '4 months', stipend: 2000, PhoneNo: '9876543210', },
+  { id: 11, lastName: 'Shukla', firstName: 'Harshit', age: 21, role: 'SDE 1', email: 'harshit@shukla.com', duration: '2 months', stipend: 4000, PhoneNo: '9876543210', },
+  { id: 12, lastName: 'Katiyar', firstName: 'Abdul', age: 21, role: 'Product Owner', email: 'abdul@katiyar.com', duration: '3 months', stipend: 3000, PhoneNo: '9876543210', },
+  { id: 13, lastName: 'Gupta', firstName: 'Ronny', age: 21, role: 'Mentor', email: 'ronny@gupta.com', duration: '2 months', stipend: 5000, PhoneNo: '9876543210', },
+  { id: 14, lastName: 'Chaudhary', firstName: 'Avi', age: 21, role: 'SQL Expert', email: 'avi@chaudhary.com', duration: '1 months', stipend: 2000, PhoneNo: '9876543210', },
+  { id: 15, lastName: 'Khanuja', firstName: 'Ansh', age: 21, role: 'DataBase Manager', email: 'ansh@khanuja.com', duration: '4 months', stipend: 2000, PhoneNo: '9876543210', },
+  { id: 16, lastName: 'Kumar', firstName: 'Ankit', age: 21, role: 'Coder', email: 'ankit@kumar.com', duration: '2 months', stipend: 5000, PhoneNo: '9876543210', },
+  { id: 17, lastName: 'Chandra', firstName: 'Jitendra', age: 21, role: 'Software Developer', email: 'jitendra@chandra.com', duration: '5 months', stipend: 5000, PhoneNo: '9876543210', },
+  { id: 18, lastName: 'Meena', firstName: 'Poojith', age: 21, role: 'UI Designer', email: 'poojith@meena.com', duration: '2 months', stipend: 4000, PhoneNo: '9876543210', },
+  { id: 19, lastName: 'Keshri', firstName: 'Mukul', age: 21, role: 'Typist', email: 'mukul@keshri.com', duration: '1 months', stipend: 3000, PhoneNo: '9876543210', },
+  { id: 20, lastName: 'Parit', firstName: 'Aditya', age: 21, role: 'Data Owner', email: 'aditya@parit.com', duration: '3 months', stipend: 2000, PhoneNo: '9876543210', },
+  { id: 21, lastName: 'Chawla', firstName: 'Vinay', age: 21, role: 'Role Owner', email: 'vinay@Chawla.com', duration: '6 months', stipend: 1000, PhoneNo: '9876543210', },
 ];
 
 function BasicSortingGrid() {
@@ -101,7 +105,7 @@ function BasicSortingGrid() {
   // });
 
   return (
-    <div style={{ height: 400, width: '100%', marginTop:'15px', border:'2px solid black' }}>
+    <div style={{ height: 400, width: '100%', marginTop: '15px', border: '2px solid black' }}>
       <DataGrid
         // {...data}
         // sortModel={[
@@ -114,16 +118,16 @@ function BasicSortingGrid() {
         columns={columns}
         // pageSize={9}
         pagination
-        // checkboxSelection
-        // disableSelectionOnClick
+      // checkboxSelection
+      // disableSelectionOnClick
       />
     </div>
   );
 }
 
-function BasicFilteringGrid(){
+function BasicFilteringGrid() {
   return (
-    <div style={{height:400,width:'100%',marginTop:'20px', border:'2px solid blue'}}>
+    <div style={{ height: 400, width: '100%', marginTop: '20px', border: '2px solid blue' }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -150,7 +154,7 @@ function SizePaginationGrid() {
   };
 
   return (
-    <div style={{ height: 400, width: '100%',marginTop:'20px', border:'2px solid lightGreen'}}>
+    <div style={{ height: 400, width: '100%', marginTop: '20px', border: '2px solid lightGreen' }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -164,22 +168,53 @@ function SizePaginationGrid() {
 }
 
 
+function App() {
+  const styles = {
+    height: 200,
+    width: "100%",
+    // border:"2px solid green"
+  }
+  const { internshipGridRow, internshipGridOptions } = internshipGridColumn
+  const pagesize = 5
+  const rowsArray = [5, 10, 15]
+  const rowHeight = 40
+  // console.log(internshipGridColumn.internshipGridColumn)
+  // console.log(internshipGridRow)
+  // console.log(internshipGridOptions)
 
-  function App() {
-    return (
-      <div className="App">
-        <header className="App-header">
-            Basic Sorting Grid
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        {/* <AdminDataGrid 
+            title={internshipGridOptions.title} 
+            rows={internshipGridRow} 
+            rowsArray={rowsArray}
+            rowHeight={rowHeight}
+            columns={internshipGridColumn.internshipGridColumn} 
+            styles={styles}
+            pagesize={pagesize}
+            />   */}
+        {/* /* Basic Sorting Grid
             <BasicSortingGrid/>
             Basic Filtering Grid
             <BasicFilteringGrid/>
             Size Pagination Grid
-            <SizePaginationGrid/>
-        </header>
-      </div>
-    );
-  }
+            <SizePaginationGrid/> */ }
+        <Table
+          title={internshipGridOptions.title}
+          rows={internshipGridRow}
+          rowsArray={rowsArray}
+          rowHeight={rowHeight}
+          columns={internshipGridColumn.internshipGridColumn}
+          styles={styles}
+          pagesize={pagesize}
+        />
+      </header>
+    </div>
+  );
+}
 
-  export default App;
+export default App;
 
 
